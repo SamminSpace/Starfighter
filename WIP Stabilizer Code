@@ -1,0 +1,18 @@
+AA = 0 /* Record Degrees/second. Counterclockwise = positive */
+CC = 0 /* Counterclockwise Nozzle output */
+C = 0 /* Clockwise Nozzle Output */
+Z = 0 /*Height from starting*/
+switch_1=0
+
+While (Z=20000) and (-15<AA<15) {
+  switch_1=1
+  if (AA > 8) {
+    C=1
+  }else if (0 < AA < 2) {
+    C=0
+  }else if (AA < -8) {
+    CC=1
+  }else if (0 > AA > -2) {
+    CC=0
+  }
+}
