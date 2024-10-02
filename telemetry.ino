@@ -77,9 +77,14 @@ void setup() {
 
 
 
-
-
-
 void loop() {
-// here is the loop
+  Packetnum = packetnum + 1
+  /* functions read sensors 
+  checking alt > 1 km  (switch to acension)
+  check alt > 20 km (switch on stabilization)
+  check alt > 1 AND moving negtive (descent)
+  check alt < 1 AND Moving neg (landing)
+  check velocity = 0 (touchdown)  */
+ 
+//then read sensors and update variables, send back into the telemetry 
 }
