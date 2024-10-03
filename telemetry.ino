@@ -12,7 +12,7 @@ int Packetnum = 0;
 
 
 //variables
-int temperature = 0;
+int temperature = 10;
 float altitude = 0; //Rori is right :(
 float accel_x = 0;
 float accel_y = 0;
