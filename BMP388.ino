@@ -4,11 +4,10 @@
 #include <107-Arduino-BMP388.h>
 
 //BMP3XX
-
+float SEALEVELPRESSURE_HPA = 1013.25;
 
 //variables needing to be defined
-float celsius = 0;
-float farenheight = 0;
+float temperature = 0;
 float altitude = 0;
 float pressure = 0;
 
@@ -24,7 +23,13 @@ void setup() {
   pinMode(BMP_sensor, INPUT);
   pinMode(output_pin, OUTPUT);
   pinMode(SD_card, OUTPUT);
-  
+
+  if (!bmp.begin_I2C()) {
+    // this sets up I2C
+    Serial.println("Could not find BMP3 sensor."); 
+    while (1);
+  }
+
 //trying to set up SD
 if (!SD.begin(SD_card)){
   Serial.println("Could not initialize SD card.");
@@ -41,36 +46,30 @@ if (SD.exists("file.txt")){
 }
 
 
-void readTemp() //read sensor
-{
-  int analogBit = analogRead(output_pin); //read sesnor and store in variable
-
-  celsius = analogBit;
-  farenheight = (celsius * 9 /5 + 32);
-  Serial.print(celsius);
-  Serial.println(" C, ");
-  Serial.print(farenheight); 
-  Serial.println(" F"); 
-  Serial.println(bmp388.io().read(BMP_sensor), HEX);
-}
-
-void writeFile() //writes to SD Card
-{
-  myFile = SD.open("temp.txt", FILE_WRITE); //opens the file 
-  if (myFile) {
-    myFile.println(celsius, 2);
-    myFile.close();
-    Serial.print(celsius, 2); //for debugging to see if writes to serial
-
-  } else {
-      Serial.println("Could not open file.");
-  }
-}
-
-
-
 void loop() {
-readTemp(); 
-writeFile();
-delay(3000);
+ if (!bmp.performReading()) {
+   Serial.println("Failed to read.");
+   return;
+ }
+  
+  Serial.print("Tempertaure: ");
+  Serial.print(bmp.temperature);
+  Serial.println(" *C");
+  //bmp.temperature = temperature;
+
+  Serial.print("Pressure: ");
+  Serial.print(bmp.pressure / 100.0);
+  Serial.println(" hPa");
+
+  Serial.print("Aprox Altitude: ");
+  Serial.print(bmp.readAltitude(SEALEVELPRESSURE_HPA);
+  Serial.println(" *C");
+
+  Serial.println();
+  /* make sure after the test that the format matches telemetry
+  this is for testing to make sure it works */
+  
+  delay(3000);
 }
+
+
