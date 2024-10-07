@@ -1,7 +1,7 @@
 #include <SD.h> //SD library
 #include <Wire.h> //I2C
 #include <SPI.h> //OLED
-#include <107-Arduino-BMP388.h>
+#include <107-Arduino-BMP388.h> // the actual BMP library
 
 //BMP3XX
 float SEALEVELPRESSURE_HPA = 1013.25;
