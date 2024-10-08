@@ -1,3 +1,11 @@
+#include <Sd.h>
+#include <Wire.h>
+
+
+
+
+
+
 AA = 0 /* Record Degrees/second. Counterclockwise = positive */
 CC = 0 /* Counterclockwise Nozzle output */
 C = 0 /* Clockwise Nozzle Output */
