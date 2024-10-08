@@ -2,9 +2,11 @@
 #include <Wire.h> //I2C
 #include <SPI.h> //OLED
 #include <107-Arduino-BMP388.h> // the actual BMP library
+#include "Adafruit_BMP3XX.h"
 
 //BMP3XX
 float SEALEVELPRESSURE_HPA = 1013.25;
+Adafruit_BMP3XX bmp;
 
 //variables needing to be defined
 float temperature = 0;
@@ -63,7 +65,7 @@ void loop() {
 
   Serial.print("Aprox Altitude: ");
   Serial.print(bmp.readAltitude(SEALEVELPRESSURE_HPA);
-  Serial.println(" *C");
+  Serial.println(" m");
 
   Serial.println();
   /* make sure after the test that the format matches telemetry
