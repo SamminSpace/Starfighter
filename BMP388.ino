@@ -1,4 +1,4 @@
-#include <SD.h> //SD library
+// #include <SD.h> //SD library
 #include <Wire.h> //I2C
 #include <SPI.h> //OLED
 #include <107-Arduino-BMP388.h> // the actual BMP library
@@ -11,7 +11,6 @@ Adafruit_BMP3XX bmp;
 // all pin set ups
 int BMP_sensor = 19;
 int output_pin = 18;
-
 
 
 
