@@ -8,17 +8,14 @@
 float SEALEVELPRESSURE_HPA = 1013.25;
 Adafruit_BMP3XX bmp;
 
-//variables needing to be defined
-float temperature = 0;
-float altitude = 0;
-float pressure = 0;
-
 // all pin set ups
 int SD_card = 4;
 int BMP_sensor = 4;
 int output_pin = 8;
 
-File myFile;
+//SD card
+File telemetry;
+
 
 void setup() {
   Serial.begin (9600);
@@ -26,27 +23,34 @@ void setup() {
   pinMode(output_pin, OUTPUT);
   pinMode(SD_card, OUTPUT);
 
-  if (!bmp.begin_I2C()) {
-    // this sets up I2C
+  if (!bmp.begin_I2C()) {  // this sets up I2C
     Serial.println("Could not find BMP3 sensor."); 
     while (1);
   }
 
-//trying to set up SD
-if (!SD.begin(SD_card)){
-  Serial.println("Could not initialize SD card.");
-}
-  
-if (SD.exists("file.txt")){
-  Serial.println("File exists.");
-  if (SD.remove("file.txt") == true){
-    Serial.println("Sucessfully removed file.");
-  } else {
-    Serial.println("Could not remove file.");
+ Serial.print("Initializing SD card...");
+  while (!Serial) { 
+    ; //wait for serial port to connect
   }
+  if (!SD.begin(SDcard)){  // if SD card is not in right pin 
+  Serial.println("Could not initialize SD card."); 
 }
+//if SD is in right pin
+  Serial.print("initialization done!");
+
 }
 
+void writeFile() {  //writes to SD Card
+  telemetry = SD.open("BMP.txt", FILE_WRITE); //opens the file 
+  if (telemetry) {
+    telemetry.print(bmp.temperature);
+    telemetry.print(bmp.pressure);
+    telemetry.println(bmp.readAltitude(SEALEVELPRESSURE_HPA));
+    telemetry.close();
+  } else {
+      Serial.println("Could not open file.");
+  }
+}
 
 void loop() {
  if (!bmp.performReading()) {
@@ -57,7 +61,6 @@ void loop() {
   Serial.print("Tempertaure: ");
   Serial.print(bmp.temperature);
   Serial.println(" *C");
-  //bmp.temperature = temperature;
 
   Serial.print("Pressure: ");
   Serial.print(bmp.pressure / 100.0);
@@ -70,7 +73,8 @@ void loop() {
   Serial.println();
   /* make sure after the test that the format matches telemetry
   this is for testing to make sure it works */
-  
+
+  writeFile();
   delay(3000);
 }
 
