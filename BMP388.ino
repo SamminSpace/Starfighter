@@ -9,9 +9,9 @@ float SEALEVELPRESSURE_HPA = 1013.25;
 Adafruit_BMP3XX bmp;
 
 // all pin set ups
-int SD_card = 4;
-int BMP_sensor = 4;
-int output_pin = 8;
+int SD_card = 0;
+int BMP_sensor = 19;
+int output_pin = 18;
 
 //SD card
 File telemetry;
