@@ -17,7 +17,7 @@ int output_pin = 18;
 
 void setup() {
   Serial.begin(9600);
-  Serial1.begin(9600);
+  Serial1.begin(9600); //check buad rate
   pinMode(BMP_sensor, INPUT);
   pinMode(output_pin, OUTPUT);
 
