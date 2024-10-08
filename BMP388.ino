@@ -9,54 +9,46 @@ float SEALEVELPRESSURE_HPA = 1013.25;
 Adafruit_BMP3XX bmp;
 
 // all pin set ups
-int SD_card = 0;
 int BMP_sensor = 19;
 int output_pin = 18;
 
-//SD card
-File telemetry;
+
 
 
 void setup() {
-  Serial.begin (9600);
+  Serial.begin(9600);
+  Serial1.begin(9600);
   pinMode(BMP_sensor, INPUT);
   pinMode(output_pin, OUTPUT);
-  pinMode(SD_card, OUTPUT);
 
   if (!bmp.begin_I2C()) {  // this sets up I2C
     Serial.println("Could not find BMP3 sensor."); 
     while (1);
   }
 
- Serial.print("Initializing SD card...");
-  while (!Serial) { 
-    ; //wait for serial port to connect
-  }
-  if (!SD.begin(SDcard)){  // if SD card is not in right pin 
-  Serial.println("Could not initialize SD card."); 
 }
-//if SD is in right pin
-  Serial.print("initialization done!");
 
-}
 
 void writeFile() {  //writes to SD Card
-  telemetry = SD.open("BMP.txt", FILE_WRITE); //opens the file 
-  if (telemetry) {
-    telemetry.print(bmp.temperature);
-    telemetry.print(bmp.pressure);
-    telemetry.println(bmp.readAltitude(SEALEVELPRESSURE_HPA));
-    telemetry.close();
-  } else {
-      Serial.println("Could not open file.");
+  Serial1.print("Tempertaure: ");
+  Serial1.print(bmp.temperature);
+  Serial1.println(" *C");
+
+  Serial1.print("Pressure: ");
+  Serial1.print(bmp.pressure / 100.0);
+  Serial1.println(" hPa");
+
+  Serial1.print("Aprox Altitude: ");
+  Serial1.print(bmp.readAltitude(SEALEVELPRESSURE_HPA));
+  Serial1.println(" m");
   }
 }
 
 void loop() {
- if (!bmp.performReading()) {
+/* if (!bmp.performReading()) {
    Serial.println("Failed to read.");
    return;
- }
+ } */
   
   Serial.print("Tempertaure: ");
   Serial.print(bmp.temperature);
