@@ -61,18 +61,18 @@ void loop()
   {
     lastTime = millis(); //Update the timer
     
-    long latitude = myGPS.getLatitude();
+    long gps_lat = myGPS.getLatitude();
     Serial.print(F("Lat: "));
-    Serial.print(latitude);
+    Serial.print(gps_lat);
 
-    long longitude = myGPS.getLongitude();
+    long gps_long = myGPS.getLongitude();
     Serial.print(F(" Long: "));
-    Serial.print(longitude);
+    Serial.print(gps_long);
     Serial.print(F(" (degrees * 10^-7)"));
 
-    long altitude = myGPS.getAltitude();
+    long gps_alt = myGPS.getAltitude();
     Serial.print(F(" Alt: "));
-    Serial.print(altitude);
+    Serial.print(gps_alt);
     Serial.print(F(" (mm)"));
 
     byte SIV = myGPS.getSIV();
