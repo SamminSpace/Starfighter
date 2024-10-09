@@ -37,7 +37,7 @@ long lastTime = 0; //Simple local timer. Limits amount if I2C traffic to Ublox m
 
 void setup()
 {
-  Serial.begin(115200);
+  Serial.begin(115200); //GPS address
   while (!Serial); //Wait for user to open terminal
   Serial.println("SparkFun Ublox Example");
 
