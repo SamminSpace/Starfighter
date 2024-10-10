@@ -5,8 +5,14 @@
 #include "Adafruit_BMP3XX.h"
 
 //BMP3XX
-float SEALEVELPRESSURE_HPA = 1013.25;
+#define BMP_SCK 13
+#define BMP_MISO 12
+#define BMP_MOSI 11
+#define BMP_CS 10
+#define SEALEVELPRESSURE_HPA (1013.25)
 Adafruit_BMP3XX bmp;
+
+
 
 // all pin set ups
 int BMP_sensor = 19;
