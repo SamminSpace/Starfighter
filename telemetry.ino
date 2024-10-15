@@ -22,6 +22,7 @@ float gyro_z = 0;
 float gps_lat = 0;
 float gps_long = 0;
 float gps_alt = 0;
+float velocity = 0;
 
 
 //set up the pins
@@ -30,7 +31,7 @@ int BMP_sensor = 19;
 int output_pin = 18;
 
 //SD CARD
-File telemetry; 
+File dataFile; 
 
 void setup() {
   Serial.begin(9600);
@@ -72,6 +73,19 @@ void setup() {
 
 void loop() {
   TelemertyLoop ();
+
+  if (altitude >= 20){
+    payload_state = "Stabilization"; 
+  }
+  if (altitude >= 1){
+    payload_state = "Asencsion"; 
+  }
+  if ((altitude <=20) && (velocity < 0)){
+    payload_state = "Descent"; 
+  }
+  if (altitude <= 1 && (velocity < 0)){
+    payload_state = "Landing"; 
+  }
 }
 
 
@@ -89,5 +103,7 @@ void TelemertyLoop ()
     ", " + gps_long + ", " + gps_alt);
     dataFile.close();
   }
+
+  Packetnum = Packetnum + 1;
 }
 
