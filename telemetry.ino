@@ -73,18 +73,29 @@ void setup() {
 
 void loop() {
   TelemertyLoop ();
+  Update_State (); //checks altitude and updates the state machine
 
-  if (altitude >= 20){
-    payload_state = "Stabilization"; 
+  while (payload_state == "Ascenion"){
+    Serial.print("We going up");
+    TelemertyLoop ();
+    Update_State (); 
   }
-  if (altitude >= 1){
-    payload_state = "Asencsion"; 
+
+  while (payload_state == "Stabilization"){
+    Serial.print("Do stabilization things");
+    TelemertyLoop ();
+    Update_State (); 
   }
-  if ((altitude <=20) && (velocity < 0)){
-    payload_state = "Descent"; 
+
+  while (payload_state == "Decent"){
+    Serial.print("Going down");
+    TelemertyLoop ();
+    Update_State (); 
   }
-  if (altitude <= 1 && (velocity < 0)){
-    payload_state = "Landing"; 
+
+  while (payload_state == "Landing" ){
+    Serial.print("Payload has sucessfully landed");
+    Serial.print("no need to collect data");
   }
 }
 
@@ -93,6 +104,8 @@ void loop() {
 //function to loop
 void TelemertyLoop ()
 {
+  MissionTime = (millis() / 1000);
+
   File dataFile = SD.open("telemetry.txt", FILE_WRITE);
   // if the file is available, write to it:
   if (dataFile) {
@@ -105,5 +118,22 @@ void TelemertyLoop ()
   }
 
   Packetnum = Packetnum + 1;
+}
+
+
+void Update_State ()
+{
+  if (altitude >= 20000){
+    payload_state = "Stabilization"; 
+  }
+  else if (altitude >= 1){
+    payload_state = "Asencsion"; 
+  }
+  else if ((altitude <=20000) && (velocity < 0)){
+    payload_state = "Descent"; 
+  }
+  else if (altitude <= 1 && (velocity < 0)){
+    payload_state = "Landing"; 
+  }
 }
 
