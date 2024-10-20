@@ -77,7 +77,7 @@ void loop()
     Serial.print(F(" SIV: "));
     Serial.print(SIV);
 
-    int UTCtime[6] ={myGNSS.getYear(),myGNSS.getMonth(),myGNSS.getDay(),myGNSS.getHour(),myGNSS.getMinute(),myGNSS.getSecond()}
+    int UTCtime[6] ={myGNSS.getHour(),myGNSS.getMinute(),myGNSS.getSecond()}
 
     Serial.println();
     Serial.print(myGNSS.getYear());
