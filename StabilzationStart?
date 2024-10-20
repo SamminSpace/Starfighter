@@ -1,0 +1,141 @@
+#include <SD.h>
+#include <SPI.h>
+#include <Wire.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BNO055.h>
+
+
+double xPos = 0, yPos = 0, headingVel = 0;
+uint16_t BNO055_SAMPLERATE_DELAY_MS = 10; //how often to read data from the board
+uint16_t PRINT_DELAY_MS = 1000; // how often to print the data
+uint16_t printCount = 0; //counter to avoid printing every 10MS sample
+
+//velocity = accel*dt (dt in seconds)
+double ACCEL_VEL_TRANSITION =  (double)(BNO055_SAMPLERATE_DELAY_MS) / 1000.0;
+double ACCEL_POS_TRANSITION = 0.5 * ACCEL_VEL_TRANSITION * ACCEL_VEL_TRANSITION;
+double DEG_2_RAD = 0.01745329251; //trig functions require radians, BNO055 outputs degrees
+
+
+
+// variables
+String payload_state = "launch";
+int altitude = 21000;
+int solenoid_left = 3;
+int solenoid_right = 4;
+//int velocity = 15;
+
+
+
+
+void setup(void)
+{
+  Serial.begin(115200);
+  pinMode(solenoid_left, OUTPUT);
+  pinMode(solenoid_right, OUTPUT);
+
+  while (!Serial) delay(10);  // wait for serial port to open!
+  if (!bno.begin())
+  {
+    Serial.print("No BNO055 detected");
+    while (1);
+  }
+
+  delay(1000);
+}
+
+
+void loop(void)
+{
+  if(altitude >= 20){
+    payload_state = "stabilization";
+
+    Serial.println("You are stabilizing!");
+    digitalWrite(solenoid_left, LOW);
+    digitalWrite(solenoid_right, LOW);
+  }
+
+  //I deleted the not needed parts
+  sensors_event_t orientationData , angVelocityData;
+  bno.getEvent(&orientationData, Adafruit_BNO055::VECTOR_EULER);
+  bno.getEvent(&angVelocityData, Adafruit_BNO055::VECTOR_GYROSCOPE);
+
+  printEvent(&orientationData); //this is for bonus challenge
+  printEvent(&angVelocityData); //THIS ONE!!!
+
+  /*uint8_t system, gyro, accel, mag = 0;
+  bno.getCalibration(&system, &gyro, &accel, &mag);
+  Serial.println();
+  Serial.print("Calibration: Sys=");
+  Serial.print(system);
+  Serial.print(" Gyro=");
+  Serial.print(gyro); */
+  
+  //OK SO GET DATA AND DO MATH
+ // THIS MAYBE WHERE WE DO PID
+ while (payload_state == "Stabilization"){
+ if (bno.getEvent(&angVelocityData) >= 10){ //how to not boolean??
+    digitalWrite(solenoid_left, HIGH);
+    digitalWrite(solenoid_right, HIGH);
+ }
+ }
+
+
+  Serial.println("--");
+  delay(BNO055_SAMPLERATE_DELAY_MS);
+}
+
+
+
+void printEvent(sensors_event_t* event) {
+  double x = -1000000, y = -1000000 , z = -1000000; //dumb values, easy to spot problem
+ if (event->type == SENSOR_TYPE_ORIENTATION) {
+    Serial.print("Orient:");
+    x = event->orientation.x;
+    y = event->orientation.y;
+    z = event->orientation.z;
+  }
+  else if (event->type == SENSOR_TYPE_GYROSCOPE) {
+    Serial.print("Gyro:");
+    x = event->gyro.x;
+    y = event->gyro.y;
+    z = event->gyro.z;
+  }
+  else if (event->type == SENSOR_TYPE_ROTATION_VECTOR) {
+    Serial.print("Rot:");
+    x = event->gyro.x;
+    y = event->gyro.y;
+    z = event->gyro.z;
+  }
+  else {
+    Serial.print("Unk:");
+  }
+
+  Serial.print("\tx= ");
+  Serial.print(x);
+  Serial.print(" |\ty= ");
+  Serial.print(y);
+  Serial.print(" |\tz= ");
+  Serial.println(z);
+
+  delay(1000);
+}
+
+
+
+
+void Update_State ()
+{
+    if (altitude >= 20000){
+    payload_state = "Stabilization"; 
+  }
+  else if (altitude >= 1){
+    payload_state = "Asencsion"; 
+  }
+  else if (altitude <=20000){ //&& (velocity < 0)){
+    payload_state = "Descent"; 
+  }
+  else if (altitude <= 1){ //&& (velocity < 0)){
+    payload_state = "Landing"; 
+  }
+}
+
