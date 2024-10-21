@@ -4,7 +4,7 @@
 
 int accel_x = 0;
 int accel_y = 0;
-int accel_x = 0;
+int accel_z = 0;
 int gyro_x = 0;
 int gyro_y = 0;
 int gyro_z = 0;
@@ -42,7 +42,7 @@ void loop() {
     Serial.print(" | Z: "); Serial.println(acc.z());
     accel_x = acc.x();
     accel_y = acc.y();
-    accel_x = acc.z();
+    accel_z = acc.z();
 
         
     Serial.print("Gyroscope: ");
