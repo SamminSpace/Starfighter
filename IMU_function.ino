@@ -2,7 +2,12 @@
 #include <Adafruit_BNO055.h>
 #include <utility/imumaths.h>
 
+int accel_x = 0;
+int accel_y = 0;
+int accel_x = 0;
 int gyro_x = 0;
+int gyro_y = 0;
+int gyro_z = 0;
 
 // Create an instance of the BNO055 class
 Adafruit_BNO055 bno = Adafruit_BNO055();
@@ -35,32 +40,19 @@ void loop() {
     Serial.print("X: "); Serial.print(acc.x());
     Serial.print(" | Y: "); Serial.print(acc.y());
     Serial.print(" | Z: "); Serial.println(acc.z());
+    accel_x = acc.x();
+    accel_y = acc.y();
+    accel_x = acc.z();
 
+        
     Serial.print("Gyroscope: ");
     Serial.print("X: "); Serial.print(gyro.x());
-    gyro_x = gyro.x();
     Serial.print(" | Y: "); Serial.print(gyro.y());
     Serial.print(" | Z: "); Serial.println(gyro.z());
+    gyro_x = gyro.x();
+    gyro_y = gyro.y();
+    gyro_z = gyro.z();
 
-    Serial.print("Magnetometer: ");
-    Serial.print("X: "); Serial.print(mag.x());
-    Serial.print(" | Y: "); Serial.print(mag.y());
-    Serial.print(" | Z: "); Serial.println(mag.z());
-
-    Serial.print("Euler Angles: ");
-    Serial.print("Heading: "); Serial.print(euler.x());
-    Serial.print(" | Roll: "); Serial.print(euler.y());
-    Serial.print(" | Pitch: "); Serial.println(euler.z());
-
-    Serial.print("Linear Acceleration: ");
-    Serial.print("X: "); Serial.print(linacc.x());
-    Serial.print(" | Y: "); Serial.print(linacc.y());
-    Serial.print(" | Z: "); Serial.println(linacc.z());
-
-    Serial.print("Gravity Vector: ");
-    Serial.print("X: "); Serial.print(grav.x());
-    Serial.print(" | Y: "); Serial.print(grav.y());
-    Serial.print(" | Z: "); Serial.println(grav.z());
 
     // Delay for a short period to avoid flooding the Serial Monitor
     delay(500); // Adjust as necessary
