@@ -2,6 +2,8 @@
 #include <Adafruit_BNO055.h>
 #include <utility/imumaths.h>
 
+int gyro_x = 0;
+
 // Create an instance of the BNO055 class
 Adafruit_BNO055 bno = Adafruit_BNO055();
 
@@ -36,6 +38,7 @@ void loop() {
 
     Serial.print("Gyroscope: ");
     Serial.print("X: "); Serial.print(gyro.x());
+    gyro_x = gyro.x();
     Serial.print(" | Y: "); Serial.print(gyro.y());
     Serial.print(" | Z: "); Serial.println(gyro.z());
 
