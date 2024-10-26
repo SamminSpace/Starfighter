@@ -21,6 +21,7 @@ double DEG_2_RAD = 0.01745329251; //trig functions require radians, BNO055 outpu
 
 
 
+
 // variables
 String payload_state = "stabilization";
 int altitude = 21000;
@@ -37,12 +38,14 @@ void setup(void)
   pinMode(solenoid_left, OUTPUT);
   pinMode(solenoid_right, OUTPUT);
 
-  while (!Serial) delay(10);  // wait for serial port to open!
+  digitalWrite(solenoid_left, LOW);
+  digitalWrite(solenoid_right, LOW);
+
+
   
   if (!bno.begin())
   {
     Serial.print("No BNO055 detected");
-    while (1);
   }
 
 
@@ -56,35 +59,23 @@ void setup(void)
 
 void loop(void)
 {
-  while(payload_state == "stabilization"){
-    
-    Serial.println("You are stabilizing!");
-    digitalWrite(solenoid_left, LOW);
-    digitalWrite(solenoid_right, LOW);
-
+ 
   Read_Ang_Velocity();
 
   if(angular_velocity >= 8){
-    digitalWrite(solenoid_left, HIGH); //CC
-  }
-  else if ((angular_velocity <= 1) && (angular_velocity > 0)){
-    digitalWrite(solenoid_left, LOW);
-  }
-  else{
-    digitalWrite(solenoid_left, LOW);
-  }
-
-  if (angular_velocity <= (0-8)){
+    digitalWrite(solenoid_left, LOW); //CC
+    Serial.println("Left solenoid on");
+  } else if (angular_velocity <= 1){
+    digitalWrite(solenoid_left, HIGH);
+  } else if (angular_velocity <= -8){
+    digitalWrite(solenoid_right, LOW);
+    Serial.println("Right solenoid on");
+  } else if(angular_velocity >= -1){
     digitalWrite(solenoid_right, HIGH);
   }
-  else if((angular_velocity > (0-1)) && (angular_velocity < 0)){
-    digitalWrite(solenoid_right, LOW);
-  }
-  else{
-    digitalWrite(solenoid_right, LOW);
-  }
+ 
 
-  }
+
 }
 
 
@@ -102,7 +93,6 @@ void Read_Ang_Velocity ()
     angular_velocity = gyro.z();
     Serial.println(angular_velocity);
   
-  delay(1000);
 }
 
 
